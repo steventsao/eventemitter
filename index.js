@@ -5,15 +5,20 @@ class EventEmitter {
   addListener(key, callback) {
     let listeners = this.listeners.has(key) ? this.listeners.get(key) : [];
     listeners.push(callback);
+    this.listeners.set(key, listeners);
     return true;
   }
   removeListener(key, callback) {
     let listeners = this.listeners.get(key);
     let targetIndex;
-    for (let i = 0; i < listeners.length; i++) {
-      if (listeners[i] === callback) {
-        targetIndex = i;
+    if (listeners && listeners.length) {
+      for (let i = 0; i < listeners.length; i++) {
+        if (listeners[i] === callback) {
+          targetIndex = i;
+        }
       }
+    } else {
+      return false;
     }
     // If listener is not found
     if (targetIndex === undefined) {
@@ -33,3 +38,5 @@ class EventEmitter {
     }
   }
 }
+
+module.exports = EventEmitter;
